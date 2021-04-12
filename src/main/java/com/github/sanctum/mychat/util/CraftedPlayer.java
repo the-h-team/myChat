@@ -7,6 +7,9 @@ import org.bukkit.entity.Player;
 
 /**
  * This class serves no real purpose as of right now. It is a reflective way to pass information via nms packet it works but hex color codes dont display properly.
+ *
+ * Hex... Why.... Oh well :p
+ *
  */
 public class CraftedPlayer {
 
