@@ -14,7 +14,6 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.5.0-M2</kotlin.version>
     </properties>
 
     <build>
@@ -118,13 +117,14 @@
         <dependency>
             <groupId>com.github.the-h-team</groupId>
             <artifactId>Labyrinth</artifactId>
-            <version>218950c37b</version>
+            <version>1.4.5</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <version>20.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
