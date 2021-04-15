@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class IChatMetaLoader {
 	public final Map<String, List<IChatComponentMeta>> META_MAP = new HashMap<>();
 	public final Map<Integer, IChatComponentTrail> RESEND_MAP = new HashMap<>();
+	public final Map<Integer, IChatComponentTrail> WITHHELD_MAP = new HashMap<>();
 	public final Map<Integer, List<String>> HEADER = new HashMap<>();
 	public final Map<Integer, List<String>> FOOTER = new HashMap<>();
 	public final LinkedList<AsyncChatChannel> CHAT_CHANNELS = new LinkedList<>();
@@ -41,7 +42,7 @@ public class IChatMetaLoader {
 	}
 
 	public String getChatColor(OfflinePlayer target) {
-		return Optional.ofNullable(MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data").getConfig().getString(target.getUniqueId().toString())).orElse("&r");
+		return Optional.ofNullable(MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data").getConfig().getString(target.getUniqueId().toString() + ".color")).orElse("");
 	}
 
 	public LinkedList<IChatComponentMeta> getMeta(String group) {

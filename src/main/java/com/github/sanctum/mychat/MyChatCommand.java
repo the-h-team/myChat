@@ -6,7 +6,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public enum MyChatCommand implements CommandData {
-	CHAT, MESSAGE, REPLY, MUTE;
+	CHAT, MESSAGE, REPLY, MUTE, MAIL;
 
 	@Override
 	public @NotNull String getLabel() {
@@ -24,6 +24,9 @@ public enum MyChatCommand implements CommandData {
 			case MUTE:
 				result = "mute";
 				break;
+			case MAIL:
+				result = "mail";
+				break;
 		}
 		return result;
 	}
@@ -33,10 +36,11 @@ public enum MyChatCommand implements CommandData {
 		List<String> aliases = new ArrayList<>();
 		switch (this) {
 			case REPLY:
-				aliases.add("reply");
+				aliases.add("r");
 				break;
 			case MESSAGE:
-				aliases.add("message");
+				aliases.add("msg");
+				aliases.add("tell");
 				break;
 			case CHAT:
 				aliases.add("chat");
@@ -44,6 +48,9 @@ public enum MyChatCommand implements CommandData {
 			case MUTE:
 				aliases.add("mute");
 				aliases.add("silence");
+				break;
+			case MAIL:
+				aliases.add("letters");
 				break;
 		}
 		return aliases;
@@ -65,6 +72,9 @@ public enum MyChatCommand implements CommandData {
 			case REPLY:
 				result = "/reply <message...>";
 				break;
+			case MAIL:
+				result = "/mail <playerName>";
+				break;
 		}
 		return result;
 	}
@@ -84,6 +94,9 @@ public enum MyChatCommand implements CommandData {
 				break;
 			case MUTE:
 				result = "Mute a specified player in chat.";
+				break;
+			case MAIL:
+				result = "View sent mail from a specified player.";
 				break;
 		}
 		return result;

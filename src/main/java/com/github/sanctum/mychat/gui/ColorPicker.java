@@ -43,7 +43,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Black:</#0caba8> &r'&0*0&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&0");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&0");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&0Text&r" + '"');
 				})
@@ -52,7 +52,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>White:</#0caba8> &r'&r*r&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&r");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&r");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&rText&r" + '"');
 				})
@@ -61,7 +61,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Blue:</#0caba8> &r'&9*9&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&9");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&9");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&9Text&r" + '"');
 				})
@@ -70,7 +70,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Cyan:</#0caba8> &r'#17ebe7*17ebe7&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "#17ebe7");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "#17ebe7");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "#17ebe7Text&r" + '"');
 				})
@@ -79,7 +79,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Green:</#0caba8> &r'#17eb81*17eb81&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "#17eb81");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "#17eb81");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "#17eb81Text&r" + '"');
 				})
@@ -88,7 +88,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Gray:</#0caba8> &r'&8*8&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&8");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&8");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&8Text&r" + '"');
 				})
@@ -97,7 +97,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Green:</#0caba8> &r'&a*a&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&a");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&a");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&aText&r" + '"');
 				})
@@ -106,7 +106,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Light Blue:</#0caba8> &r'&b*b&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&b");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&b");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&bText&r" + '"');
 				})
@@ -115,7 +115,7 @@ public class ColorPicker {
 				.setText(StringUtils.use("<#03fca5>Light Gray:</#0caba8> &r'&7*7&r'").translate())
 				.setAction(click -> {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
-					user.getConfig().set(target.getUniqueId().toString(), "&7");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", "&7");
 					user.saveConfig();
 					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&7Text&r" + '"');
 				})

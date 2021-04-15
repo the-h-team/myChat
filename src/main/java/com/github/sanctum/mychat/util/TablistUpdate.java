@@ -136,11 +136,11 @@ public class TablistUpdate {
 			List<TablistDisplay> FOOTER = MyChat.getAddon().getLoader().DISPLAY_FOOTER;
 			calculate(target, TABSIDE.BOTTOM, FOOTER);
 			target.setPlayerListHeaderFooter(
-					StringUtils.use(HEADER.get(Math.max(header(target), 0)).toString()
-							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target),
-					StringUtils.use(FOOTER.get(Math.max(footer(target), 0)).toString()
-							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target));
-			target.setPlayerListName(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", target.getDisplayName())).translate(target));
+					ChatComponentUtil.translate(StringUtils.use(HEADER.get(Math.max(header(target), 0)).toString()
+							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target)),
+					ChatComponentUtil.translate(StringUtils.use(FOOTER.get(Math.max(footer(target), 0)).toString()
+							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target)));
+			target.setPlayerListName(ChatComponentUtil.translate(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", target.getDisplayName())).translate(target)));
 		}).debug().cancelAfter(task -> {
 			if (MyChat.getAddon().getLoader().RELOADED) {
 				task.cancel();

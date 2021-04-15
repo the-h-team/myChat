@@ -11,7 +11,11 @@ import java.util.Map;
 
 public enum MySettings {
 
-	WORD_BLACKLIST, WORD_REPLACEMENTS, TABLIST_USED, TABLIST_WINDBACK, TABLIST_HEADER, TABLIST_FOOTER, TABLIST_INTERVAL, TABLIST_PLAYER, COOLDOWN_TIME, OFFENSE_MAX, OFFENSE_MESSAGE, OFFENSE_KICK_MESSAGE;
+	MESSAGE_OUT, MESSAGE_OUT_HOVER, MESSAGE_OUT_META, MESSAGE_IN,
+	MESSAGE_IN_HOVER, MESSAGE_IN_META, WORD_BLACKLIST, WORD_WITHHOLD_LIST,
+	WORD_REPLACEMENTS, TABLIST_USED, TABLIST_WINDBACK, TABLIST_HEADER,
+	TABLIST_FOOTER, TABLIST_INTERVAL, TABLIST_PLAYER, COOLDOWN_TIME, OFFENSE_MAX,
+	MOTD_SERVER, MOTD_JOIN, JOIN, LEAVE, OFFENSE_MESSAGE, OFFENSE_KICK_MESSAGE;
 
 	private static final FileManager settings = MyEssentialsAPI.getInstance().getAddonFile("Settings", "Chat");
 
@@ -38,6 +42,10 @@ public enum MySettings {
 				return settings.getConfig().getStringList("context.blacklist");
 			case WORD_REPLACEMENTS:
 				return settings.getConfig().getStringList("context.replacement");
+			case WORD_WITHHOLD_LIST:
+				return settings.getConfig().getStringList("context.with-held");
+			case MOTD_JOIN:
+				return settings.getConfig().getStringList("motd.join");
 		}
 		return new ArrayList<>();
 	}
@@ -62,6 +70,24 @@ public enum MySettings {
 				return settings.getConfig().getString("offense.kick-message");
 			case TABLIST_PLAYER:
 				return settings.getConfig().getString("tab-list.player-name");
+			case MESSAGE_IN:
+				return settings.getConfig().getString("messaging.in.normal");
+			case MESSAGE_IN_HOVER:
+				return settings.getConfig().getString("messaging.in.hover");
+			case MESSAGE_IN_META:
+				return settings.getConfig().getString("messaging.in.meta");
+			case MESSAGE_OUT:
+				return settings.getConfig().getString("messaging.out.normal");
+			case MESSAGE_OUT_HOVER:
+				return settings.getConfig().getString("messaging.out.hover");
+			case MESSAGE_OUT_META:
+				return settings.getConfig().getString("messaging.out.meta");
+			case MOTD_SERVER:
+				return settings.getConfig().getString("motd.server-list");
+			case JOIN:
+				return settings.getConfig().getString("activity.join.message");
+			case LEAVE:
+				return settings.getConfig().getString("activity.leave.message");
 		}
 		return "";
 	}
@@ -70,6 +96,10 @@ public enum MySettings {
 		switch (this) {
 			case TABLIST_USED:
 				return settings.getConfig().getBoolean("tab-list.enabled");
+			case JOIN:
+				return settings.getConfig().getBoolean("activity.join.enabled");
+			case LEAVE:
+				return settings.getConfig().getBoolean("activity.leave.enabled");
 			case TABLIST_WINDBACK:
 				if (!settings.exists()) {
 					return true;
@@ -85,6 +115,32 @@ public enum MySettings {
 
 	public static void loadDefaults() {
 		if (!MySettings.getSettings().exists()) {
+			FileManager colors = MyEssentialsAPI.getInstance().getAddonFile("Colors", "Chat");
+			colors.getConfig().set("a.name", "jolly");
+			colors.getConfig().set("a.from", "#5dd473");
+			colors.getConfig().set("a.to", "#02f2ce");
+			colors.getConfig().set("b.name", "warm");
+			colors.getConfig().set("b.from", "#f2be02");
+			colors.getConfig().set("b.to", "#f28602");
+			colors.getConfig().set("c.name", "nightmare");
+			colors.getConfig().set("c.from", "#3d687d");
+			colors.getConfig().set("c.to", "#190524");
+			colors.getConfig().set("d.name", "turtle");
+			colors.getConfig().set("d.from", "#3d7d3d");
+			colors.getConfig().set("d.to", "#2aa16f");
+			colors.getConfig().set("e.name", "apple");
+			colors.getConfig().set("e.from", "#00a60e");
+			colors.getConfig().set("e.to", "#48ff00");
+			colors.getConfig().set("f.name", "magical");
+			colors.getConfig().set("f.from", "#00ffcc");
+			colors.getConfig().set("f.to", "#ff00d4");
+			colors.getConfig().set("g.name", "frosty");
+			colors.getConfig().set("g.from", "#ebffff");
+			colors.getConfig().set("g.to", "#ebfff1");
+			colors.getConfig().set("h.name", "glazed");
+			colors.getConfig().set("h.from", "#ffdc7a");
+			colors.getConfig().set("h.to", "#fabc0f");
+			colors.saveConfig();
 			FileManager settings = MySettings.getSettings();
 			settings.getConfig().set("tab-list.enabled", true);
 			settings.getConfig().set("tab-list.wind-back", true);
@@ -115,11 +171,24 @@ public enum MySettings {
 			settings.getConfig().set("tab-list.footer.11", Collections.singletonList("<#34e090>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬o▬▬</#9cde3a>"));
 			settings.getConfig().set("tab-list.footer.12", Collections.singletonList("<#9cde3a>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬o▬</#32a890>"));
 			settings.getConfig().set("context.blacklist", Arrays.asList("nigger", "faggot"));
+			settings.getConfig().set("context.with-held", Arrays.asList("ni", "n i", "n_i", "n1", "n 1", "n_1"));
 			settings.getConfig().set("context.replacement", Arrays.asList("jake from statefarm", "dirty fart", "fish sandwich", "green eggs"));
 			settings.getConfig().set("offense.fail-message", "&cSending messages too fast! Offense x {0}");
 			settings.getConfig().set("offense.kick-message", "&cSpamming not allowed.");
 			settings.getConfig().set("offense.max-before-kick", 5);
 			settings.getConfig().set("context.send-cooldown", 3);
+			settings.getConfig().set("messaging.out.normal", "&7[&b✉&7] &3&ome &r&l&m→&r &7{TARGET}");
+			settings.getConfig().set("messaging.out.hover", " &7[&r{MESSAGE}&7]");
+			settings.getConfig().set("messaging.out.meta", "&7Click to respond to the previous message.");
+			settings.getConfig().set("messaging.in.normal", "&7[&b✉&7] &7{SENDER} &r&l&m→&r &3&ome");
+			settings.getConfig().set("messaging.in.hover", " &7[&r{MESSAGE}&7]");
+			settings.getConfig().set("messaging.in.meta", "&7Click to respond to my message.");
+			settings.getConfig().set("motd.join", Arrays.asList("Welcome to our server {SERVER}", "It's nice to finally meet you %player_name%!"));
+			settings.getConfig().set("motd.server-list", "My Server > Come play with us!");
+			settings.getConfig().set("activity.join.enabled", true);
+			settings.getConfig().set("activity.join.message", "{PLAYER} &7[&a+&7]");
+			settings.getConfig().set("activity.leave.enabled", true);
+			settings.getConfig().set("activity.leave.message", "{PLAYER} &7[&c-&7]");
 			settings.saveConfig();
 			settings.reload();
 		}
