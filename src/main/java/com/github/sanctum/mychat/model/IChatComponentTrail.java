@@ -1,18 +1,19 @@
 package com.github.sanctum.mychat.model;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An object that encapsulates recorded chat history values.
  */
-public class IChatComponentTrail {
+public class IChatComponentTrail implements Comparable<IChatComponentTrail> {
 
 	private final Player sender;
 	private final String message;
-	private final AsyncChatChannel channel;
+	private final IChatChannel channel;
 	private final int key;
 
-	public IChatComponentTrail(Player sender, AsyncChatChannel chatChannel, String message, int key) {
+	public IChatComponentTrail(Player sender, IChatChannel chatChannel, String message, int key) {
 		this.sender = sender;
 		this.key = key;
 		this.channel = chatChannel;
@@ -22,7 +23,7 @@ public class IChatComponentTrail {
 	/**
 	 * @return The channel associated with this recorded chat message.
 	 */
-	public AsyncChatChannel getChannel() {
+	public IChatChannel getChannel() {
 		return channel;
 	}
 
@@ -45,5 +46,11 @@ public class IChatComponentTrail {
 	 */
 	public Player getSender() {
 		return sender;
+	}
+
+
+	@Override
+	public int compareTo(@NotNull IChatComponentTrail o) {
+		return Integer.compare(getKey(), o.getKey());
 	}
 }

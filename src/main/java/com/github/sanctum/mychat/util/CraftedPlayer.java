@@ -21,13 +21,15 @@ public class CraftedPlayer {
 
 	public void sendPacket(Object packet)
 	{
+
+
 		try
 		{
-			Object handle = target.getClass().getMethod("getHandle", new Class[0]).invoke(target);
+			Object handle = target.getClass().getMethod("getHandle").invoke(target);
 			Field access = handle.getClass().getField("playerConnection");
 			access.setAccessible(true);
 			Object playerConnection = access.get(handle);
-			playerConnection.getClass().getMethod("sendPacket", new Class[] { getNMSClass("Packet") }).invoke(playerConnection, packet);
+			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
 		}
 		catch (Exception e)
 		{

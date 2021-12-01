@@ -1,159 +1,172 @@
 package com.github.sanctum.mychat.util;
 
-import com.github.sanctum.labyrinth.library.DirectivePoint;
+import com.github.sanctum.labyrinth.formatting.TabGroup;
+import com.github.sanctum.labyrinth.formatting.TabInfo;
+import com.github.sanctum.labyrinth.formatting.TablistInstance;
 import com.github.sanctum.labyrinth.library.StringUtils;
 import com.github.sanctum.labyrinth.task.Schedule;
 import com.github.sanctum.mychat.MyChat;
 import com.github.sanctum.mychat.MySettings;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TablistUpdate {
 
-	private static final Map<Player, Integer> HEADER_INSERT = new HashMap<>();
-	private static final Map<Player, Integer> FOOTER_INSERT = new HashMap<>();
-	private static final Map<Player, Boolean> HEADER_DRAWNBACK = new HashMap<>();
-	private static final Map<Player, Boolean> FOOTER_DRAWNBACK = new HashMap<>();
-
-	private static void positionHeader(Player target, int i) {
-		if (i == 24) {
-			HEADER_INSERT.put(target, 0);
-			return;
-		}
-		if (String.valueOf(i).contains("-")) {
-			HEADER_DRAWNBACK.put(target, true);
-		} else {
-			HEADER_DRAWNBACK.put(target, false);
-		}
-		int result = header(target) + i;
-		HEADER_INSERT.put(target, result);
-	}
-
-	private static void positionFooter(Player target, int i) {
-		if (i == 24) {
-			FOOTER_INSERT.put(target, 0);
-			return;
-		}
-		if (String.valueOf(i).contains("-")) {
-			FOOTER_DRAWNBACK.put(target, true);
-		} else {
-			FOOTER_DRAWNBACK.put(target, false);
-		}
-		int result = footer(target) + i;
-		FOOTER_INSERT.put(target, result);
-	}
-
-	private static int header(Player target) {
-		if (!HEADER_INSERT.containsKey(target)) {
-			HEADER_INSERT.put(target, 0);
-		}
-		return HEADER_INSERT.get(target);
-	}
-
-	private static int footer(Player target) {
-		if (!FOOTER_INSERT.containsKey(target)) {
-			FOOTER_INSERT.put(target, 0);
-		}
-		return FOOTER_INSERT.get(target);
-	}
-
-	private static boolean headerDrawnback(Player target) {
-		return HEADER_DRAWNBACK.getOrDefault(target, false);
-	}
-
-	private static boolean footerDrawnback(Player target) {
-		return FOOTER_DRAWNBACK.getOrDefault(target, false);
-	}
-
-	public static void calculate(final Player target, TABSIDE side, List<TablistDisplay> list) {
-		switch (side) {
-			case TOP:
-				if (header(target) + 1 >= list.size()) {
-					if (MySettings.TABLIST_WINDBACK.valid()) {
-						positionHeader(target, -1);
-					} else {
-						positionHeader(target, 24);
-					}
-				} else {
-					if (headerDrawnback(target)) {
-						if (header(target) == 0) {
-							positionHeader(target, 1);
-						} else {
-							positionHeader(target, -1);
-						}
-					} else {
-						positionHeader(target, 1);
-					}
-				}
-				break;
-			case BOTTOM:
-				if (footer(target) + 1 >= list.size()) {
-					if (MySettings.TABLIST_WINDBACK.valid()) {
-						positionFooter(target, -1);
-					} else {
-						positionFooter(target, 24);
-					}
-				} else {
-					if (footerDrawnback(target)) {
-						if (footer(target) == 0) {
-							positionFooter(target, 1);
-						} else {
-							positionFooter(target, -1);
-						}
-					} else {
-						positionFooter(target, 1);
-					}
-				}
-				break;
-		}
-	}
-
 	public static void load() {
-		MyChat.getAddon().getLoader().DISPLAY_HEADER.clear();
-		for (Map.Entry<Integer, List<String>> entry : MyChat.getAddon().getLoader().HEADER.entrySet()) {
-			TablistDisplay header = TablistDisplay.of();
-			for (int i = 0; i < entry.getValue().size(); i++) {
-				header.input(i, entry.getValue().get(i));
+
+		Bukkit.getOnlinePlayers().forEach(target -> {
+			TablistInstance instance = TablistInstance.get(target);
+			if (instance.isEnabled()) {
+				instance.disable();
+				if (instance.getGroup("SERVER") != null) {
+					instance.remove(instance.getGroup("SERVER"));
+				}
+				instance.add(newServerTabGroup());
+				Schedule.sync(() -> instance.enable(player -> player.setPlayerListName(ChatComponentUtil.translate(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", player.getDisplayName())).translate(player))), TimeUnit.MILLISECONDS, MySettings.TABLIST_INTERVAL.getInt())).waitReal(40);
+
+			} else {
+				if (instance.getGroup("SERVER") != null) {
+					instance.remove(instance.getGroup("SERVER"));
+				}
+				instance.add(newServerTabGroup());
+				instance.enable(player -> player.setPlayerListName(ChatComponentUtil.translate(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", player.getDisplayName())).translate(player))), TimeUnit.MILLISECONDS, MySettings.TABLIST_INTERVAL.getInt());
 			}
-			MyChat.getAddon().getLoader().DISPLAY_HEADER.add(header);
-		}
-		MyChat.getAddon().getLoader().DISPLAY_FOOTER.clear();
-		for (Map.Entry<Integer, List<String>> entry : MyChat.getAddon().getLoader().FOOTER.entrySet()) {
-			TablistDisplay footer = TablistDisplay.of();
-			for (int i = 0; i < entry.getValue().size(); i++) {
-				footer.input(i, entry.getValue().get(i));
+
+		});
+	}
+
+	private static TabGroup newServerTabGroup() {
+		return new TabGroup() {
+
+			private final List<TabInfo> headerlist = Collections.synchronizedList(new LinkedList<>());
+			private final List<TabInfo> footerlist = Collections.synchronizedList(new LinkedList<>());
+			private int headerPos;
+			private int footerPos;
+			private boolean isActive = true;
+			private boolean headerGoingBackwards;
+			private boolean footerGoingBackwards;
+
+			{
+				for (Map.Entry<Integer, List<String>> entry : MyChat.getAddon().getLoader().HEADER_QUEUE.entrySet()) {
+					TabInfo header = TabInfo.of();
+					entry.getValue().forEach(header::put);
+					headerlist.add(header);
+				}
+				for (Map.Entry<Integer, List<String>> entry : MyChat.getAddon().getLoader().FOOTER_QUEUE.entrySet()) {
+					TabInfo footer = TabInfo.of();
+					entry.getValue().forEach(footer::put);
+					footerlist.add(footer);
+				}
 			}
-			MyChat.getAddon().getLoader().DISPLAY_FOOTER.add(footer);
-		}
+
+			@Override
+			public String getKey() {
+				return "SERVER";
+			}
+
+			@Override
+			public boolean isActive() {
+				return isActive;
+			}
+
+			@Override
+			public boolean isWindable() {
+				return MySettings.TABLIST_WINDBACK.valid();
+			}
+
+			@Override
+			public void setActive(boolean active) {
+				this.isActive = active;
+			}
+
+			@Override
+			public TabInfo getHeader(int index) {
+				return Collections.unmodifiableList(headerlist).get(index);
+			}
+
+			@Override
+			public int getCurrentHeaderIndex() {
+				return headerPos;
+			}
+
+			@Override
+			public TabInfo getFooter(int index) {
+				return Collections.unmodifiableList(footerlist).get(index);
+			}
+
+			@Override
+			public int getCurrentFooterIndex() {
+				return footerPos;
+			}
+
+			@Override
+			public void setWindable(boolean windable) {
+				// default provision, let config control wind-ability.
+			}
+
+			@Override
+			public void nextDisplayIndex(int side) {
+				switch (side) {
+					case 0:
+						if (headerPos + 1 >= headerlist.size()) {
+							if (isWindable()) {
+								headerGoingBackwards = true;
+								headerPos = headerPos - 1;
+							} else {
+								headerPos = 0;
+							}
+						} else {
+							if (headerGoingBackwards) {
+								if (headerPos == 0) {
+									headerGoingBackwards = false;
+									headerPos = headerPos + 1;
+								} else {
+									headerPos = headerPos - 1;
+								}
+							} else {
+								headerPos = headerPos + 1;
+							}
+						}
+						break;
+					case 1:
+						if (footerPos + 1 >= footerlist.size()) {
+							if (isWindable()) {
+								footerGoingBackwards = true;
+								footerPos = footerPos - 1;
+							} else {
+								footerPos = 0;
+							}
+						} else {
+							if (footerGoingBackwards) {
+								if (footerPos == 0) {
+									footerGoingBackwards = false;
+									footerPos = footerPos + 1;
+								} else {
+									footerPos = footerPos - 1;
+								}
+							} else {
+								footerPos = footerPos + 1;
+							}
+						}
+						break;
+				}
+			}
+		};
 	}
 
 	public static void to(final Player target) {
-		Schedule.sync(() -> {
-			List<TablistDisplay> HEADER = MyChat.getAddon().getLoader().DISPLAY_HEADER;
-			calculate(target, TABSIDE.TOP, HEADER);
-			List<TablistDisplay> FOOTER = MyChat.getAddon().getLoader().DISPLAY_FOOTER;
-			calculate(target, TABSIDE.BOTTOM, FOOTER);
-			target.setPlayerListHeaderFooter(
-					ChatComponentUtil.translate(StringUtils.use(HEADER.get(Math.max(header(target), 0)).toString()
-							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target)),
-					ChatComponentUtil.translate(StringUtils.use(FOOTER.get(Math.max(footer(target), 0)).toString()
-							.replace("{PLAYER_DIRECTION}", DirectivePoint.get(target).name())).translate(target)));
-			target.setPlayerListName(ChatComponentUtil.translate(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", target.getDisplayName())).translate(target)));
-		}).debug().cancelAfter(task -> {
-			if (MyChat.getAddon().getLoader().RELOADED) {
-				task.cancel();
-				return;
-			}
-			if (!target.isOnline()) {
-				task.cancel();
-			}
-		}).repeatReal(0, MySettings.TABLIST_INTERVAL.getInt());
-	}
-
-	private enum TABSIDE {
-		TOP, BOTTOM
+		TablistInstance tablist = TablistInstance.get(target);
+		if (tablist.isEnabled()) tablist.disable();
+		if (tablist.getGroup("SERVER") != null) {
+			tablist.remove(tablist.getGroup("SERVER"));
+		}
+		tablist.add(newServerTabGroup());
+		Schedule.sync(() -> tablist.enable(player -> player.setPlayerListName(ChatComponentUtil.translate(StringUtils.use(MySettings.TABLIST_PLAYER.getString().replace("{PLAYER}", player.getDisplayName())).translate(player))), TimeUnit.MILLISECONDS, MySettings.TABLIST_INTERVAL.getInt())).waitReal(2);
 	}
 
 }

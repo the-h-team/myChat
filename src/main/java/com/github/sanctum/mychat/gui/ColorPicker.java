@@ -1,23 +1,7 @@
 package com.github.sanctum.mychat.gui;
 
-import com.github.sanctum.labyrinth.data.FileManager;
-import com.github.sanctum.labyrinth.gui.InventoryRows;
-import com.github.sanctum.labyrinth.gui.menuman.Menu;
-import com.github.sanctum.labyrinth.gui.menuman.MenuBuilder;
-import com.github.sanctum.labyrinth.library.Message;
-import com.github.sanctum.labyrinth.library.StringUtils;
-import com.github.sanctum.myessentials.Essentials;
-import com.github.sanctum.myessentials.api.MyEssentialsAPI;
-import java.util.UUID;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-
 public class ColorPicker {
-
+/*
 	private static final NamespacedKey key = new NamespacedKey(Essentials.getInstance(), "player_uuid");
 
 	private static ItemStack markedItem(Material type, UUID id) {
@@ -37,6 +21,25 @@ public class ColorPicker {
 		return false;
 	}
 
+	public static AnvilMenu write(Player target) {
+		return AnvilBuilder.from(StringUtils.use("&3Specify a color.").translate())
+				.setLeftItem(builder -> {
+					ItemStack paper = Items.edit().setType(Material.PAPER).setTitle("&aClick the other paper.").build();
+					builder.setItem(paper);
+					builder.setClick((player, text, args) -> {
+						if (text.isEmpty()) {
+							Message.form(player).send("&cNo color code is being provided.");
+						} else {
+							FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
+							user.getConfig().set(target.getUniqueId().toString() + ".color", text);
+							user.saveConfig();
+							player.sendMessage(StringUtils.use(MyEssentialsAPI.getInstance().getPrefix() + " &a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"').translate() + ChatComponentUtil.translate(player, text + "Text") + StringUtils.use("&r" + '"').translate());
+						}
+						player.closeInventory();
+					});
+				}).get();
+	}
+
 	public static Menu view(Player target) {
 		return new MenuBuilder(InventoryRows.THREE, target.getDisplayName() + " Color Picker.")
 				.addElement(markedItem(Material.BLACK_WOOL, target.getUniqueId()))
@@ -45,7 +48,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&0");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&0Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&0Text&r" + '"');
 				})
 				.assignToSlots(0)
 				.addElement(markedItem(Material.WHITE_WOOL, target.getUniqueId()))
@@ -54,7 +57,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&r");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&rText&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&rText&r" + '"');
 				})
 				.assignToSlots(1)
 				.addElement(markedItem(Material.BLUE_WOOL, target.getUniqueId()))
@@ -63,7 +66,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&9");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&9Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&9Text&r" + '"');
 				})
 				.assignToSlots(2)
 				.addElement(markedItem(Material.CYAN_WOOL, target.getUniqueId()))
@@ -72,7 +75,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "#17ebe7");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "#17ebe7Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "#17ebe7Text&r" + '"');
 				})
 				.assignToSlots(3)
 				.addElement(markedItem(Material.GREEN_WOOL, target.getUniqueId()))
@@ -81,7 +84,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "#17eb81");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "#17eb81Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "#17eb81Text&r" + '"');
 				})
 				.assignToSlots(4)
 				.addElement(markedItem(Material.GRAY_WOOL, target.getUniqueId()))
@@ -90,7 +93,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&8");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&8Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&8Text&r" + '"');
 				})
 				.assignToSlots(5)
 				.addElement(markedItem(Material.GREEN_WOOL, target.getUniqueId()))
@@ -99,7 +102,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&a");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&aText&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&aText&r" + '"');
 				})
 				.assignToSlots(5)
 				.addElement(markedItem(Material.LIGHT_BLUE_WOOL, target.getUniqueId()))
@@ -108,7 +111,7 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&b");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&bText&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&bText&r" + '"');
 				})
 				.assignToSlots(6)
 				.addElement(markedItem(Material.LIGHT_GRAY_WOOL, target.getUniqueId()))
@@ -117,14 +120,29 @@ public class ColorPicker {
 					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
 					user.getConfig().set(target.getUniqueId().toString() + ".color", "&7");
 					user.saveConfig();
-					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat colored was changed to &r" + '"' + "&7Text&r" + '"');
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was changed to &r" + '"' + "&7Text&r" + '"');
 				})
 				.assignToSlots(7)
+				.addElement(markedItem(Material.NAME_TAG, target.getUniqueId()))
+				.setText(StringUtils.use("<#03fca5>Custom</#0caba8>").translate())
+				.setAction(click -> write(target).setViewer(click.getPlayer()).open())
+				.assignToSlots(21)
+				.addElement(markedItem(Material.NAME_TAG, target.getUniqueId()))
+				.setText(StringUtils.use("<#03fca5>Reset</#0caba8>").translate())
+				.setAction(click -> {
+					FileManager user = MyEssentialsAPI.getInstance().getAddonFile("Users", "Chat/Data");
+					user.getConfig().set(target.getUniqueId().toString() + ".color", null);
+					user.saveConfig();
+					Message.form(click.getPlayer()).setPrefix(MyEssentialsAPI.getInstance().getPrefix()).send("&a" + target.getName() + "'s" + " &2&ochat color was reset");
+				})
+				.assignToSlots(23)
 				.setFiller(new ItemStack(Material.GRAY_STAINED_GLASS_PANE))
 				.setText(" ")
 				.set()
 				.cancelLowerInventoryClicks(false)
 				.create(Essentials.getInstance());
 	}
+
+ */
 
 }

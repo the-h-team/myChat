@@ -2,15 +2,13 @@ package com.github.sanctum.mychat.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * An object that encapsulates custom data for configurable chat channels.
  */
-public class AsyncChatChannel {
+public class IChatChannel {
 
 	private final List<Player> recipients = new ArrayList<>();
 	private final String channel;
@@ -18,7 +16,7 @@ public class AsyncChatChannel {
 	private final boolean main;
 	private boolean muted;
 
-	public AsyncChatChannel(@NotNull String tag, @NotNull String permission, boolean isMain) {
+	public IChatChannel(@NotNull String tag, @NotNull String permission, boolean isMain) {
 		this.channel = tag;
 		this.main = isMain;
 		this.permission = permission;
@@ -99,8 +97,6 @@ public class AsyncChatChannel {
 			this.recipients.add(target);
 		}
 	}
-
-
 
 
 }

@@ -13,7 +13,7 @@ public enum MyChatCommand implements CommandData {
 		String result = "";
 		switch (this) {
 			case MESSAGE:
-				result = "message";
+				result = "msg";
 				break;
 			case REPLY:
 				result = "reply";
@@ -39,7 +39,7 @@ public enum MyChatCommand implements CommandData {
 				aliases.add("r");
 				break;
 			case MESSAGE:
-				aliases.add("msg");
+				aliases.add("message");
 				aliases.add("tell");
 				break;
 			case CHAT:

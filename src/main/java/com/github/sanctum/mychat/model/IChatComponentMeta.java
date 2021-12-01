@@ -1,6 +1,6 @@
 package com.github.sanctum.mychat.model;
 
-import com.github.sanctum.labyrinth.library.StringUtils;
+import com.github.sanctum.labyrinth.library.ListUtils;
 import com.github.sanctum.mychat.MyChat;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -39,56 +39,57 @@ public class IChatComponentMeta {
 	 * @return The optional command to run when the player clicks the {@link IChatComponentMeta#getHoverText()}
 	 */
 	public @Nullable String getAction() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".action");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".action");
 	}
 
 	/**
 	 * @return The optional command/text suggestion to offer the player who clicked.
 	 */
 	public @Nullable String getSuggestion() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".suggest");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".suggest");
 	}
 
 	/**
 	 * @return The optional url to open when clicking on this meta.
 	 */
 	public @Nullable String getUrl() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".url");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".url");
 	}
 
 	/**
 	 * @return The optional permission node required to be able to view this meta information.
 	 */
 	public @Nullable String getPermission() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".node");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".node");
 	}
 
 	/**
 	 * @return The optional prefix to be appended before the meta. (no actions mappable, plain text)
 	 */
 	public @Nullable String getPrefix() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".prefix");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".prefix");
 	}
 
 	/**
 	 * @return The optional suffix to be appended after the meta. (no actions mappable, plain text)
 	 */
 	public @Nullable String getSuffix() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".suffix");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".suffix");
 	}
 
 	/**
 	 * @return The text that solely activates the desired actions.
 	 */
 	public @NotNull	String getHoverText() {
-		return MyChat.getFormatFile().getConfig().getString(group + "." + key + ".text");
+		return MyChat.getFormatFile().getRoot().getString(group + "." + key + ".text");
 	}
 
 	/**
 	 * @return The list of information to be appended to this meta's hover message.
 	 */
 	public @NotNull List<String> getHoverMeta() {
-		return StringUtils.use("\n").join(MyChat.getFormatFile().getConfig().getStringList(group + "." + key + ".hover"));
+
+		return ListUtils.use(MyChat.getFormatFile().getRoot().getStringList(group + "." + key + ".hover")).append(s -> "\n");
 	}
 
 }
